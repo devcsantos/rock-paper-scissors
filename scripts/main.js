@@ -101,11 +101,30 @@ function translatePosition() {
 function update() {
   if(isCPU && playerChoice && !opponentChoice) cpuSelectChoice(); // only select after player
   if(playerChoice && opponentChoice) { // evaluate only when both made their move
-    evaluate(playerChoice, opponentChoice);
-    clearInterval(run); // stop checking
+    setTimeout(() => { // wait 2 seconds for suspense :)
+      evaluate(playerChoice, opponentChoice);
+      translatePositionMiddle();
+      clearInterval(run); // stop checking
+    }, 2000);
   }
   document.getElementById('opponent-score-box').innerHTML = opponentScore;
   document.getElementById('player-score-box').innerHTML = playerScore;
+}
+
+function translatePositionMiddle() {
+  let opponentObject = document.getElementById(`${opponentChoice.toLowerCase()}-opponent`);
+  let playerObject = document.getElementById(`${playerChoice.toLowerCase()}-player`);
+
+  let versusOffsetX = document.getElementById(`versus-box`).offsetLeft; // get the x position of versus box
+  let versusOffsetY = document.getElementById(`versus-box`).offsetTop; // get the y position of versus box
+
+  let opponentMoveX = versusOffsetX - opponentObject.offsetLeft; // amount of pixels to move in x-axis
+  let opponentMoveY = versusOffsetY - opponentObject.offsetTop; // amount of pixels to move in y-axis
+  let playerMoveX = versusOffsetX - playerObject.offsetLeft; // amount of pixels to move in x-axis
+  let playerMoveY = versusOffsetY - playerObject.offsetTop; // amount of pixels to move in y-axis
+
+  opponentObject.style.transform = `translate(${opponentMoveX}px,${opponentMoveY}px)`;
+  playerObject.style.transform = `translate(${playerMoveX}px,${playerMoveY}px)`;
 }
 
 function translatePositionCPU() {
