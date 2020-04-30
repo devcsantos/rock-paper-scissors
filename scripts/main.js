@@ -129,8 +129,11 @@ function translatePosition(self, isCPU) {
 
 function update() {
   translatePosition(this, false);
-  setTimeout(() => { // simulate CPU thinking
-    if(isCPU && playerChoice && !opponentChoice) cpuSelectChoice(); // only select after player
+    if(isCPU && playerChoice && !opponentChoice) {
+      setTimeout(() => { // simulate CPU thinking
+        cpuSelectChoice(); // only select after player
+      }, 2000);
+    }
     if(playerChoice && opponentChoice) { // evaluate only when both made their move
       setTimeout(() => { // wait for suspense :)
         evaluate(playerChoice, opponentChoice);
@@ -144,7 +147,6 @@ function update() {
         }, 2000);
       }, 2000);
     }
-  }, 2000);
 }
 
 function updateScore() {
