@@ -9,6 +9,7 @@
 
   <body>
     <div id='game-box'>
+      <p class='player-name' id='first-player'>CPU OPPONENT</p>
       <div class='side-box' id='opponent'>
         <div class='rock-paper-scissors' id='rock-opponent'>
           <canvas class='canvas-option rock'>ROCK</canvas>
@@ -36,7 +37,9 @@
           </div>
         </div>
         <div id='score-box'>
-          
+          <div id='opponent-score-box'></div>
+          <div><p>-</p></div>
+          <div id='player-score-box'></div>
         </div>
       </div>
       <div class='side-box' id='player'>
@@ -50,11 +53,9 @@
           <canvas class='canvas-option scissors'>SCISSORS</canvas>
         </div>
       </div>
+      <p class='player-name' id='second-player'>PLAYER</p>
     </div>
     <img id='image-reference' src='images/RPS.png'>
   </body>
-
-
-
   <script src='scripts/main.js'></script>
 </html>

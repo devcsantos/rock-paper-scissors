@@ -2,24 +2,21 @@ const ROCK = 'ROCK';
 const PAPER = 'PAPER';
 const SCISSORS = 'SCISSORS';
 const RPS = [ROCK, PAPER, SCISSORS];
-const MESSAGE_DRAW = 'DRAW';
-const PLAYER_WIN = 'PLAYER WINS';
-const OPPONENT_WIN = 'OPPONENT WINS';
+const MESSAGE_DRAW = `THIS ROUND IS A DRAW`;
 
 let playerChoice;
 let opponentChoice;
 let playerScore = 0;
 let opponentScore = 0;
+let playerNames = document.getElementsByClassName('player-name');
 
 let isCPU = confirm(`Play with an AI? Cancel for two-player mode`) ? true : false;
 
 loadEventListeners();
+initializePlayerValues();
 drawImages();
 
 let run = setInterval(update, 2000); // keep checking for inputs
-
-
-document.querySelector('#score-box').innerHTML = `${playerScore} - ${opponentScore}`; // initialize score text
 
 function loadEventListeners() {
   let choices = document.getElementsByClassName('side-box');
@@ -35,8 +32,25 @@ function loadEventListeners() {
   }
 }
 
+function initializePlayerValues() {
+  for(let i=playerNames.length-1; i >= 0; i--) {
+    if(isCPU) { 
+      playerNames[i].innerHTML = `PLAYER ${i}`;
+      break; // dont rename opponent
+    } else { playerNames[i].innerHTML = `PLAYER ${i+1}`; }
+  }
+
+  document.getElementById('opponent-score-box').innerHTML = opponentScore;
+  document.getElementById('player-score-box').innerHTML = playerScore;
+}
+
 function evaluate(playerChoice, opponentChoice) {
   let message;
+
+  let firstPlayerName = playerNames[0].innerHTML;
+  let secondPlayerName = playerNames[1].innerHTML;
+  const OPPONENT_WIN = `${firstPlayerName} WINS THIS ROUND!`;
+  const PLAYER_WIN = `${secondPlayerName} WINS THIS ROUND!`;
 
   if(playerChoice == ROCK) {
     if(opponentChoice == ROCK) message = MESSAGE_DRAW
@@ -74,7 +88,12 @@ function translatePosition() {
   eval(`${sideName}Choice = ${choice}`); // dynamic assigning to either playerChoice or opponentChoice
 
   let siblingElements = this.parentElement.children;
-  for(i=0;i<siblingElements.length;i++) { siblingElements[i].onclick = undefined;} // remove ability to choose
+  for(i=0;i<siblingElements.length;i++) {
+    if(siblingElements[i] !== this) {
+      siblingElements[i].onclick = undefined;
+      siblingElements[i].style.opacity = 0;
+    }
+  } // remove ability to choose
 
   console.log(`${sideName} click ${choice}`);
 }
@@ -85,7 +104,8 @@ function update() {
     evaluate(playerChoice, opponentChoice);
     clearInterval(run); // stop checking
   }
-  document.querySelector('#score-box').innerHTML = `${playerScore} - ${opponentScore}`;
+  document.getElementById('opponent-score-box').innerHTML = opponentScore;
+  document.getElementById('player-score-box').innerHTML = playerScore;
 }
 
 function translatePositionCPU() {
@@ -97,6 +117,14 @@ function translatePositionCPU() {
   let moveY = arenaOffsetY - self.offsetTop; // amount of pixels to move in y-axis
 
   self.style.transform =  `translate(${moveX}px,${moveY}px)`;
+
+  let siblingElements = self.parentElement.children;
+  for(i=0;i<siblingElements.length;i++) {
+    if(siblingElements[i] !== self) {
+      siblingElements[i].onclick = undefined;
+      siblingElements[i].style.opacity = 0;
+    }
+  }
 }
 
 function cpuSelectChoice() {
