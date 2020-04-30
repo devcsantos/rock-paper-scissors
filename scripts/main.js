@@ -71,9 +71,21 @@ function update() {
   }
 }
 
+function translatePosition2() {
+  let self = document.getElementById(`${opponentChoice.toLowerCase()}-opponent`);
+  let arenaOffsetX = document.getElementById(`opponent-choice`).offsetLeft; // get the x position of arena
+  let arenaOffsetY = document.getElementById(`opponent-choice`).offsetTop; // get the y position of arena
+
+  let moveX = arenaOffsetX - self.offsetLeft; // amount of pixels to move in x-axis
+  let moveY = arenaOffsetY - self.offsetTop; // amount of pixels to move in y-axis
+
+  self.style.transform =  `translate(${moveX}px,${moveY}px)`;
+}
+
 function cpuSelectChoice() {
   console.log(`CPU Selecting choice`);
   opponentChoice = RPS[getRandomInt(3)];
+  translatePosition2();
   console.log(`CPU selected ${opponentChoice}`);
 }
 
