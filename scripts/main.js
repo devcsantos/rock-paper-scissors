@@ -17,10 +17,13 @@ loadEventListeners();
 
 let run = setInterval(update, 2000); // keep checking for inputs
 
+
+document.querySelector("#score-box").innerHTML = `${playerScore} - ${opponentScore}`; // initialize score text
+
 function loadEventListeners() {
   let choices = document.getElementsByClassName('side-box');
 
-  for(let index=choices.length-1; index > 0; index--) {
+  for(let index=choices.length-1; index >= 0; index--) {
     let side = choices[index].children;
     for(let i=0;  i<side.length; i++) {
       let choice = side[i];
