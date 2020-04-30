@@ -60,6 +60,10 @@ function translatePosition() {
 
   this.style.transform =  `translate(${moveX}px,${moveY}px)`;
   eval(sideName + 'Choice = ' + choice); // dynamic assigning to either playerChoice or opponentChoice
+
+  let siblingElements = this.parentElement.children;
+  for(i=0;i<siblingElements.length;i++) { siblingElements[i].onclick = undefined;} // remove ability to choose
+
   console.log(`${sideName} click ${choice}`);
 }
 
@@ -71,7 +75,7 @@ function update() {
   }
 }
 
-function translatePosition2() {
+function translatePositionCPU() {
   let self = document.getElementById(`${opponentChoice.toLowerCase()}-opponent`);
   let arenaOffsetX = document.getElementById(`opponent-choice`).offsetLeft; // get the x position of arena
   let arenaOffsetY = document.getElementById(`opponent-choice`).offsetTop; // get the y position of arena
@@ -85,7 +89,7 @@ function translatePosition2() {
 function cpuSelectChoice() {
   console.log(`CPU Selecting choice`);
   opponentChoice = RPS[getRandomInt(3)];
-  translatePosition2();
+  translatePositionCPU();
   console.log(`CPU selected ${opponentChoice}`);
 }
 
