@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Anton&display=swap");
+
 :root {
   --rock-color: gray;
   --scissors-color: orange;
@@ -22,7 +24,7 @@
 }
 
 .rock-paper-scissors {
-  height: 30vh;
+  height: 33.333333vh;
   transition: transform 0.4s ease-out;
 }
 
@@ -35,7 +37,7 @@
 }
 
 #arena-box div {
-  height: 30vh;
+  height: 33.333333vh;
   width: 100%;
 }
 
@@ -47,3 +49,18 @@
 .rock { background-color: var(--rock-color); }
 .paper { background-color: var(--paper-color); }
 .scissors { background-color: var(--scissors-color); }
+
+#result-box , #versus-box {
+  font-size: 3rem;
+  font-family: "Anton", sans-serif;
+}
+
+#result-text {
+  font-size: 5rem;
+  text-shadow: 1px 1px 5px gold;
+}
+
+#score-box {
+  font-family: "Anton", sans-serif;
+  font-size: 7rem;
+}

@@ -8,6 +8,8 @@ const OPPONENT_WIN = 'OPPONENT WINS';
 
 let playerChoice;
 let opponentChoice;
+let playerScore = 0;
+let opponentScore = 0;
 
 let isCPU = confirm(`Play with an AI? Cancel for two-player mode`) ? true : false;
 
@@ -46,6 +48,12 @@ function evaluate(playerChoice, opponentChoice) {
     else message = MESSAGE_DRAW
   }
 
+  switch(message) {
+    case OPPONENT_WIN: opponentScore++; break;
+    case PLAYER_WIN: playerScore++; break;
+  }
+
+  document.querySelector('#result-text').innerHTML = message;
   console.log(message);
 }
 
@@ -73,6 +81,7 @@ function update() {
     evaluate(playerChoice, opponentChoice);
     clearInterval(run); // stop checking
   }
+  document.querySelector("#score-box").innerHTML = `${playerScore} - ${opponentScore}`;
 }
 
 function translatePositionCPU() {
