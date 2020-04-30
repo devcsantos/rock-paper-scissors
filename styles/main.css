@@ -23,6 +23,7 @@
 
 .rock-paper-scissors {
   height: 30vh;
+  transition: transform 0.4s ease-out;
 }
 
 #arena-box {
