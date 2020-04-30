@@ -25,7 +25,7 @@ body {
 
 .player-name {
   align-self: center;
-  background-image: linear-gradient(25deg, #AACCBB, #CCBBAA);
+  background-image: linear-gradient(180deg, rgb(45, 157, 165), rgb(70, 88, 138));
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;

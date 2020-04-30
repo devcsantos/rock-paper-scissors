@@ -3,7 +3,10 @@ const PAPER = 'PAPER';
 const SCISSORS = 'SCISSORS';
 const RPS = [ROCK, PAPER, SCISSORS];
 const MESSAGE_DRAW = `THIS ROUND IS A DRAW`;
-const MAX_SCORE = 5;
+const MAX_SCORE = 3;
+
+const playerElements = document.getElementById('player').children; // keep original styles of elements
+const opponentElements = document.getElementById('opponent').children;
 
 let playerChoice;
 let opponentChoice;
@@ -14,10 +17,20 @@ let playerNames = document.getElementsByClassName('player-name');
 let isCPU = confirm(`Play with an AI? Cancel for two-player mode`) ? true : false;
 
 loadEventListeners();
+resetObjectStyles();
 initializePlayerValues();
 drawImages();
 
-let run = setInterval(update, 2000); // keep checking for inputs
+function initializeForNewRound() {
+  clearChoices();
+  loadEventListeners();
+  resetObjectStyles();
+}
+
+function clearChoices() {
+  playerChoice = undefined;
+  opponentChoice = undefined;
+}
 
 function loadEventListeners() {
   let choices = document.getElementsByClassName('side-box');
@@ -27,7 +40,7 @@ function loadEventListeners() {
     for(let i=0;  i<side.length; i++) {
       let choice = side[i];
       //choice.addEventListener(onclick, translatePosition, false); wont work for some reason
-      choice.onclick = translatePosition;
+      choice.onclick = update;
       choice.classList.add('hover'); // animate player controls only
     }
     if(isCPU) { break; } // dont add onclick events for CPU
@@ -70,43 +83,68 @@ function evaluate(playerChoice, opponentChoice) {
     case PLAYER_WIN: playerScore++; break;
   }
 
-  document.querySelector('#result-text').innerHTML = message;
+  updateMessage(message);
   updateScore();
   console.log(message);
 }
 
-function translatePosition() {
-  let sideName = this.parentElement.id;
-  let choice = this.id.replace(/-(player|opponent)/,``).toUpperCase();
+function updateMessage(message) {
+  document.querySelector('#result-text').innerHTML = message;
+}
+
+function resetObjectStyles() {
+  updateMessage('');
+  let newPlayerElements = document.getElementById('player').children;
+  let newOpponentElements = document.getElementById('opponent').children;
+
+  for(let i=0; i<newPlayerElements.length; i++) {
+    newPlayerElements[i].style = playerElements[i].style;
+    newOpponentElements[i].style = opponentElements[i].style;
+  }
+}
+
+function translatePosition(self, isCPU) {
+  let sideName = self.parentElement.id;
+  if(isCPU) sideName = 'opponent';
+  let choice = self.id.replace(/-(player|opponent)/,``).toUpperCase();
   let arenaOffsetX = document.getElementById(`${sideName}-choice`).offsetLeft; // get the x position of arena
   let arenaOffsetY = document.getElementById(`${sideName}-choice`).offsetTop; // get the y position of arena
 
-  let moveX = arenaOffsetX - this.offsetLeft; // amount of pixels to move in x-axis
-  let moveY = arenaOffsetY - this.offsetTop; // amount of pixels to move in y-axis
+  let moveX = arenaOffsetX - self.offsetLeft; // amount of pixels to move in x-axis
+  let moveY = arenaOffsetY - self.offsetTop; // amount of pixels to move in y-axis
 
-  this.style.transform =  `translate(${moveX}px,${moveY}px)`;
+  self.style.transform =  `translate(${moveX}px,${moveY}px)`;
   eval(`${sideName}Choice = ${choice}`); // dynamic assigning to either playerChoice or opponentChoice
 
-  let siblingElements = this.parentElement.children;
+  let siblingElements = self.parentElement.children;
   for(i=0;i<siblingElements.length;i++) {
-    if(siblingElements[i] !== this) {
-      siblingElements[i].onclick = undefined;
-      siblingElements[i].style.opacity = 0;
+    siblingElements[i].onclick = undefined; // remove ability to choose
+    if(siblingElements[i] !== self) {
+      siblingElements[i].style.opacity = 0; // fade out
     }
-  } // remove ability to choose
+  }
 
   console.log(`${sideName} click ${choice}`);
 }
 
 function update() {
-  if(isCPU && playerChoice && !opponentChoice) cpuSelectChoice(); // only select after player
-  if(playerChoice && opponentChoice) { // evaluate only when both made their move
-    setTimeout(() => { // wait 2 seconds for suspense :)
-      evaluate(playerChoice, opponentChoice);
-      translatePositionMiddle();
-      clearInterval(run); // stop checking
-    }, 2000);
-  }
+  translatePosition(this, false);
+  setTimeout(() => { // simulate CPU thinking
+    if(isCPU && playerChoice && !opponentChoice) cpuSelectChoice(); // only select after player
+    if(playerChoice && opponentChoice) { // evaluate only when both made their move
+      setTimeout(() => { // wait for suspense :)
+        evaluate(playerChoice, opponentChoice);
+        translatePositionMiddle();
+        setTimeout(() => {// wait for a while so user sees result
+          if(MAX_SCORE > opponentScore && MAX_SCORE > playerScore) initializeForNewRound(); // reset
+          else {
+            let winner = opponentScore > playerChoice ? playerNames[0].innerHTML : playerNames[1].innerHTML;
+            updateMessage(`GAME OVER! ${winner} won the game!`);
+          }
+        }, 2000);
+      }, 2000);
+    }
+  }, 2000);
 }
 
 function updateScore() {
@@ -134,29 +172,11 @@ function translatePositionMiddle() {
   playerObject.style.transform = `translate(${playerMoveX}px,${playerMoveY}px)`;
 }
 
-function translatePositionCPU() {
-  let self = document.getElementById(`${opponentChoice.toLowerCase()}-opponent`);
-  let arenaOffsetX = document.getElementById(`opponent-choice`).offsetLeft; // get the x position of arena
-  let arenaOffsetY = document.getElementById(`opponent-choice`).offsetTop; // get the y position of arena
-
-  let moveX = arenaOffsetX - self.offsetLeft; // amount of pixels to move in x-axis
-  let moveY = arenaOffsetY - self.offsetTop; // amount of pixels to move in y-axis
-
-  self.style.transform =  `translate(${moveX}px,${moveY}px)`;
-
-  let siblingElements = self.parentElement.children;
-  for(i=0;i<siblingElements.length;i++) {
-    if(siblingElements[i] !== self) {
-      siblingElements[i].onclick = undefined;
-      siblingElements[i].style.opacity = 0;
-    }
-  }
-}
-
 function cpuSelectChoice() {
   console.log('CPU Selecting choice');
   opponentChoice = RPS[getRandomInt(3)];
-  translatePositionCPU();
+  let self = document.getElementById(`${opponentChoice.toLowerCase()}-opponent`);
+  translatePosition(self, true);
   console.log(`CPU selected ${opponentChoice}`);
 }
 
