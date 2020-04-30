@@ -20,7 +20,7 @@ let run = setInterval(update, 2000); // keep checking for inputs
 function loadEventListeners() {
   let choices = document.getElementsByClassName('side-box');
 
-  for(let index=0; index < choices.length; index++) {
+  for(let index=choices.length-1; index > 0; index--) {
     let side = choices[index].children;
     for(let i=0;  i<side.length; i++) {
       let choice = side[i];

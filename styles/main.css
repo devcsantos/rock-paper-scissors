@@ -8,7 +8,7 @@
 
 #game-box {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   position: fixed;
   top: 0px;
   left: 0px;
@@ -18,32 +18,34 @@
 
 .side-box {
   display: flex;
-  flex-direction: column;
-  width: 20vw;
+  flex-direction: row;
+  height: 20vh;
+  width: 100vw;
   flex-shrink: 3;
 }
 
 .rock-paper-scissors {
-  height: 33.333333vh;
+  height: 20vh;
+  width: 33.33333vw;
   transition: transform 0.4s ease-out;
 }
 
 #arena-box {
-  width: 60vw;
+  height: 60vw;
   flex-shrink: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   text-align: center;
 }
 
 #arena-box div {
-  height: 33.333333vh;
+  height: 100%;
   width: 100%;
 }
 
 #combat-box {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .rock { background-color: var(--rock-color); }
