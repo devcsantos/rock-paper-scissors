@@ -8,11 +8,9 @@ const OPPONENT_WIN = 'OPPONENT WINS';
 let playerChoice;
 let opponentChoice;
 
-playerChoice = ROCK;
-opponentChoice = SCISSORS;
-
 loadEventListeners();
-evaluate(playerChoice, opponentChoice);
+
+let run = setInterval(update, 2000); // keep checking for inputs
 
 function loadEventListeners() {
   let choices = document.getElementsByClassName('side-box');
@@ -49,6 +47,7 @@ function evaluate(playerChoice, opponentChoice) {
 
 function translatePosition() {
   let sideName = this.parentElement.id;
+  let choice = this.id.replace(/-(player|opponent)/,``).toUpperCase();
   let arenaOffsetX = document.getElementById(`${sideName}-choice`).offsetLeft; // get the x position of arena
   let arenaOffsetY = document.getElementById(`${sideName}-choice`).offsetTop; // get the y position of arena
 
@@ -56,5 +55,13 @@ function translatePosition() {
   let moveY = arenaOffsetY - this.offsetTop; // amount of pixels to move in y-axis
 
   this.style.transform =  `translate(${moveX}px,${moveY}px)`;
-  console.log(`${sideName} click`);
+  eval(sideName + 'Choice = ' + choice); // dynamic assigning to either playerChoice or opponentChoice
+  console.log(`${sideName} click ${choice}`);
+}
+
+function update() {
+  if(playerChoice && opponentChoice) { // evaluate only when both made their move
+    evaluate(playerChoice, opponentChoice);
+    clearInterval(run); // stop checking
+  }
 }
