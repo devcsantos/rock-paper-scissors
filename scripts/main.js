@@ -14,11 +14,12 @@ let opponentScore = 0;
 let isCPU = confirm(`Play with an AI? Cancel for two-player mode`) ? true : false;
 
 loadEventListeners();
+drawImages();
 
 let run = setInterval(update, 2000); // keep checking for inputs
 
 
-document.querySelector("#score-box").innerHTML = `${playerScore} - ${opponentScore}`; // initialize score text
+document.querySelector('#score-box').innerHTML = `${playerScore} - ${opponentScore}`; // initialize score text
 
 function loadEventListeners() {
   let choices = document.getElementsByClassName('side-box');
@@ -70,7 +71,7 @@ function translatePosition() {
   let moveY = arenaOffsetY - this.offsetTop; // amount of pixels to move in y-axis
 
   this.style.transform =  `translate(${moveX}px,${moveY}px)`;
-  eval(sideName + 'Choice = ' + choice); // dynamic assigning to either playerChoice or opponentChoice
+  eval(`${sideName}Choice = ${choice}`); // dynamic assigning to either playerChoice or opponentChoice
 
   let siblingElements = this.parentElement.children;
   for(i=0;i<siblingElements.length;i++) { siblingElements[i].onclick = undefined;} // remove ability to choose
@@ -84,7 +85,7 @@ function update() {
     evaluate(playerChoice, opponentChoice);
     clearInterval(run); // stop checking
   }
-  document.querySelector("#score-box").innerHTML = `${playerScore} - ${opponentScore}`;
+  document.querySelector('#score-box').innerHTML = `${playerScore} - ${opponentScore}`;
 }
 
 function translatePositionCPU() {
@@ -99,7 +100,7 @@ function translatePositionCPU() {
 }
 
 function cpuSelectChoice() {
-  console.log(`CPU Selecting choice`);
+  console.log('CPU Selecting choice');
   opponentChoice = RPS[getRandomInt(3)];
   translatePositionCPU();
   console.log(`CPU selected ${opponentChoice}`);
@@ -107,4 +108,27 @@ function cpuSelectChoice() {
 
 function getRandomInt(max) { // taken from MDN
   return Math.floor(Math.random() * Math.floor(max));
+}
+
+function drawImages() {
+  let canvasList = document.getElementsByClassName('canvas-option');
+  let image = document.getElementById('image-reference');
+
+  for(i = 0; i < canvasList.length; i++) {
+    let canvas = canvasList[i];
+    let context = canvas.getContext('2d');
+    let optionType = canvas.parentElement.id.replace(/-(player|opponent)/,``).toUpperCase();
+
+    switch(optionType) {
+      case ROCK: 
+        context.drawImage(image, 75, 60, 115, 160, 30, -20, 250, 150); // rock image
+        break;
+      case PAPER: 
+        context.drawImage(image, 200, 60, 110, 160, 45, 0, 200, 150); // paper image
+        break;
+      case SCISSORS: 
+        context.drawImage(image, 315, 60, 100, 160, 55, 0, 175, 150); // scissors image
+        break;
+    }
+  }
 }
