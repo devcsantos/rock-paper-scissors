@@ -3,6 +3,7 @@ const PAPER = 'PAPER';
 const SCISSORS = 'SCISSORS';
 const RPS = [ROCK, PAPER, SCISSORS];
 const MESSAGE_DRAW = `THIS ROUND IS A DRAW`;
+const MAX_SCORE = 5;
 
 let playerChoice;
 let opponentChoice;
@@ -27,6 +28,7 @@ function loadEventListeners() {
       let choice = side[i];
       //choice.addEventListener(onclick, translatePosition, false); wont work for some reason
       choice.onclick = translatePosition;
+      choice.classList.add('hover'); // animate player controls only
     }
     if(isCPU) { break; } // dont add onclick events for CPU
   }
@@ -39,9 +41,6 @@ function initializePlayerValues() {
       break; // dont rename opponent
     } else { playerNames[i].innerHTML = `PLAYER ${i+1}`; }
   }
-
-  document.getElementById('opponent-score-box').innerHTML = opponentScore;
-  document.getElementById('player-score-box').innerHTML = playerScore;
 }
 
 function evaluate(playerChoice, opponentChoice) {
@@ -72,6 +71,7 @@ function evaluate(playerChoice, opponentChoice) {
   }
 
   document.querySelector('#result-text').innerHTML = message;
+  updateScore();
   console.log(message);
 }
 
@@ -107,6 +107,9 @@ function update() {
       clearInterval(run); // stop checking
     }, 2000);
   }
+}
+
+function updateScore() {
   document.getElementById('opponent-score-box').innerHTML = opponentScore;
   document.getElementById('player-score-box').innerHTML = playerScore;
 }
@@ -123,6 +126,10 @@ function translatePositionMiddle() {
   let playerMoveX = versusOffsetX - playerObject.offsetLeft; // amount of pixels to move in x-axis
   let playerMoveY = versusOffsetY - playerObject.offsetTop; // amount of pixels to move in y-axis
 
+  if(opponentScore > playerScore) { playerObject.style.opacity = 0; }
+  else if(playerScore > opponentScore) { opponentObject.style.opacity = 0; }
+  else { playerObject.style.opacity=0; opponentObject.style.opacity =0; }
+  
   opponentObject.style.transform = `translate(${opponentMoveX}px,${opponentMoveY}px)`;
   playerObject.style.transform = `translate(${playerMoveX}px,${playerMoveY}px)`;
 }
