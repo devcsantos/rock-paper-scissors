@@ -1,0 +1,26 @@
+#game-box {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: row;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.side-box {
+  flex-shrink: 3;
+}
+
+#arena-box {
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#combat-box {
+  display: flex;
+  flex-direction: row;
+}
