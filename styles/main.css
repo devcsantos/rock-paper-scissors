@@ -1,7 +1,5 @@
 #game-box {
   display: flex;
-  justify-content: center;
-  align-content: center;
   flex-direction: row;
   position: fixed;
   top: 0px;
@@ -11,13 +9,27 @@
 }
 
 .side-box {
+  display: flex;
+  flex-direction: column;
+  width: 20vw;
   flex-shrink: 3;
 }
 
+.rock-paper-scissors {
+  height: 30vh;
+}
+
 #arena-box {
+  width: 60vw;
   flex-shrink: 1;
   display: flex;
   flex-direction: column;
+  text-align: center;
+}
+
+#arena-box div {
+  height: 30vh;
+  width: 100%;
 }
 
 #combat-box {
