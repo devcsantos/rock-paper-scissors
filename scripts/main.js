@@ -86,6 +86,8 @@ function evaluate(playerChoice, opponentChoice) {
   updateMessage(message);
   updateScore();
   console.log(message);
+
+  return message;
 }
 
 function updateMessage(message) {
@@ -103,9 +105,8 @@ function resetObjectStyles() {
   }
 }
 
-function translatePosition(self, isCPU) {
+function translatePosition(self) {
   let sideName = self.parentElement.id;
-  if(isCPU) sideName = 'opponent';
   let choice = self.id.replace(/-(player|opponent)/,``).toUpperCase();
   let arenaOffsetX = document.getElementById(`${sideName}-choice`).offsetLeft; // get the x position of arena
   let arenaOffsetY = document.getElementById(`${sideName}-choice`).offsetTop; // get the y position of arena
@@ -124,29 +125,24 @@ function translatePosition(self, isCPU) {
     }
   }
 
-  console.log(`${sideName} click ${choice}`);
+  console.log(`${sideName} selected ${choice}`);
 }
 
 function update() {
   translatePosition(this, false);
-    if(isCPU && playerChoice && !opponentChoice) {
-      setTimeout(() => { // simulate CPU thinking
-        cpuSelectChoice(); // only select after player
+  if(isCPU && playerChoice && !opponentChoice) cpuSelectChoice(); // only select after player
+  if(playerChoice && opponentChoice) { // evaluate only when both made their move
+    setTimeout(() => { // wait for suspense :)
+      translatePositionMiddle(evaluate(playerChoice, opponentChoice));
+      setTimeout(() => {// wait for a while so user sees result
+        if(MAX_SCORE > opponentScore && MAX_SCORE > playerScore) initializeForNewRound(); // reset
+        else {
+          let winner = opponentScore > playerScore ? playerNames[0].innerHTML : playerNames[1].innerHTML;
+          updateMessage(`GAME OVER! ${winner} won the game!`);
+        }
       }, 2000);
-    }
-    if(playerChoice && opponentChoice) { // evaluate only when both made their move
-      setTimeout(() => { // wait for suspense :)
-        evaluate(playerChoice, opponentChoice);
-        translatePositionMiddle();
-        setTimeout(() => {// wait for a while so user sees result
-          if(MAX_SCORE > opponentScore && MAX_SCORE > playerScore) initializeForNewRound(); // reset
-          else {
-            let winner = opponentScore > playerScore ? playerNames[0].innerHTML : playerNames[1].innerHTML;
-            updateMessage(`GAME OVER! ${winner} won the game!`);
-          }
-        }, 2000);
-      }, 2000);
-    }
+    }, 2000);
+  }
 }
 
 function updateScore() {
@@ -154,7 +150,7 @@ function updateScore() {
   document.getElementById('player-score-box').innerHTML = playerScore;
 }
 
-function translatePositionMiddle() {
+function translatePositionMiddle(message) {
   let opponentObject = document.getElementById(`${opponentChoice.toLowerCase()}-opponent`);
   let playerObject = document.getElementById(`${playerChoice.toLowerCase()}-player`);
 
@@ -166,8 +162,11 @@ function translatePositionMiddle() {
   let playerMoveX = versusOffsetX - playerObject.offsetLeft; // amount of pixels to move in x-axis
   let playerMoveY = versusOffsetY - playerObject.offsetTop; // amount of pixels to move in y-axis
 
-  if(opponentScore > playerScore) { playerObject.style.opacity = 0; }
-  else if(playerScore > opponentScore) { opponentObject.style.opacity = 0; }
+  let playerWin = message.includes(playerNames[1].innerHTML);
+  let opponentWin = message.includes(playerNames[0].innerHTML);
+
+  if(opponentWin) { playerObject.style.opacity = 0; }
+  else if(playerWin) { opponentObject.style.opacity = 0; }
   else { playerObject.style.opacity=0; opponentObject.style.opacity =0; }
   
   opponentObject.style.transform = `translate(${opponentMoveX}px,${opponentMoveY}px)`;
@@ -178,7 +177,7 @@ function cpuSelectChoice() {
   console.log('CPU Selecting choice');
   opponentChoice = RPS[getRandomInt(3)];
   let self = document.getElementById(`${opponentChoice.toLowerCase()}-opponent`);
-  translatePosition(self, true);
+  translatePosition(self);
   console.log(`CPU selected ${opponentChoice}`);
 }
 
