@@ -138,7 +138,7 @@ function update() {
         setTimeout(() => {// wait for a while so user sees result
           if(MAX_SCORE > opponentScore && MAX_SCORE > playerScore) initializeForNewRound(); // reset
           else {
-            let winner = opponentScore > playerChoice ? playerNames[0].innerHTML : playerNames[1].innerHTML;
+            let winner = opponentScore > playerScore ? playerNames[0].innerHTML : playerNames[1].innerHTML;
             updateMessage(`GAME OVER! ${winner} won the game!`);
           }
         }, 2000);
