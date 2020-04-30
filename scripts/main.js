@@ -1,12 +1,15 @@
 const ROCK = 'ROCK';
 const PAPER = 'PAPER';
 const SCISSORS = 'SCISSORS';
+const RPS = [ROCK, PAPER, SCISSORS];
 const MESSAGE_DRAW = 'DRAW';
 const PLAYER_WIN = 'PLAYER WINS';
 const OPPONENT_WIN = 'OPPONENT WINS';
 
 let playerChoice;
 let opponentChoice;
+
+let isCPU = confirm(`Play with an AI? Cancel for two-player mode`) ? true : false;
 
 loadEventListeners();
 
@@ -22,6 +25,7 @@ function loadEventListeners() {
       //choice.addEventListener(onclick, translatePosition, false); wont work for some reason
       choice.onclick = translatePosition;
     }
+    if(isCPU) { break; } // dont add onclick events for CPU
   }
 }
 
@@ -60,8 +64,19 @@ function translatePosition() {
 }
 
 function update() {
+  if(isCPU && playerChoice && !opponentChoice) cpuSelectChoice(); // only select after player
   if(playerChoice && opponentChoice) { // evaluate only when both made their move
     evaluate(playerChoice, opponentChoice);
     clearInterval(run); // stop checking
   }
+}
+
+function cpuSelectChoice() {
+  console.log(`CPU Selecting choice`);
+  opponentChoice = RPS[getRandomInt(3)];
+  console.log(`CPU selected ${opponentChoice}`);
+}
+
+function getRandomInt(max) { // taken from MDN
+  return Math.floor(Math.random() * Math.floor(max));
 }
